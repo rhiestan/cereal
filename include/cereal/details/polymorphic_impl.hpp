@@ -622,7 +622,7 @@ namespace cereal
 
             auto ptr = PolymorphicCasters::template downcast<T>( dptr, baseInfo );
 
-            #ifdef _MSC_VER
+            #if defined(_MSC_VER) && !defined(__clang__)
             savePolymorphicSharedPtr( ar, ptr, ::cereal::traits::has_shared_from_this<T>::type() ); // MSVC doesn't like typename here
             #else // not _MSC_VER
             savePolymorphicSharedPtr( ar, ptr, typename ::cereal::traits::has_shared_from_this<T>::type() );
@@ -684,7 +684,7 @@ namespace cereal
     template <class Archive, class T>
     struct polymorphic_serialization_support
     {
-      #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
+      #if defined(_MSC_VER) && !defined(__INTEL_COMPILER) && !defined(__clang__)
       //! Creates the appropriate bindings depending on whether the archive supports
       //! saving or loading
       virtual CEREAL_DLL_EXPORT void instantiate() CEREAL_USED;
